@@ -10,7 +10,7 @@ void TreeNodeExample::expand()
     for(unsigned i = 0; i < 5; i++){
 
         // create and add new node
-        TreeNodeExample node = new TreeNodeExample(i);
+        TreeNodeExample* node = new TreeNodeExample(i);
         children.push_back(node);
     }
 }
@@ -18,27 +18,27 @@ void TreeNodeExample::expand()
 double TreeNodeExample::rollOut(TreeNode* _node)
 {
     // default roll out for example
-	return rand() % 15 + 5;
+    return rand() % 15 + 5;
 }
 
-TreeNodeExample* TreeNodeExample::getBestChild()
+TreeNode* TreeNodeExample::getBestChild()
 {
-	double bestScore = 0.;
-	TreeNode* childNode = nullptr;
+    double bestScore = 0.;
+    TreeNode* childNode = nullptr;
 
-	// find best child score based on number of times it was chosen
-	for (auto child : children)
-	{
-		double score = child->getScore();
+    // find best child score based on number of times it was chosen
+    for (auto child : children)
+    {
+        double score = child->getScore();
 
-		if (score > bestScore)
-		{
-			childNode = child;
+        if (score > bestScore)
+        {
+            childNode = child;
 
-			// set next move information
-			bestScore = child->getScore();
-		}
-	}
+            // set next move information
+            bestScore = child->getScore();
+        }
+    }
 
-	return this;
+    return childNode;
 }
