@@ -15,7 +15,7 @@ void TreeNodeExample::expand()
     for(unsigned i = 0; i < 5; i++){
 
         // create and add new node
-        TreeNodeExample* node = new TreeNodeExample(i);
+        TreeNodeExample* node = new TreeNodeExample(i, this);
         children.push_back(node);
     }
 }

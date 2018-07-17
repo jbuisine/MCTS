@@ -9,7 +9,7 @@ int main () {
 
     unsigned numberOfIterations = 100;
 
-    TreeNodeExample* rootNode = new TreeNodeExample(0);
+    TreeNodeExample* rootNode = new TreeNodeExample(sqrt(2), true);
 
     for(unsigned i = 0; i < numberOfIterations; i++){
         rootNode->selectAction();
