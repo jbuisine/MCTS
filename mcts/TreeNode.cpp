@@ -1,7 +1,20 @@
 #include "TreeNode.h"
 
-TreeNode::TreeNode(unsigned _index) : nVisits(0), totalScore(0.), nodeIndex(_index), children(std::vector<TreeNode*>())
+TreeNode::TreeNode(double _ucbParam, bool _problemType) : parent(nullptr), nVisits(0), totalScore(0.), nodeIndex(0),
+                                                          ucbParam(_ucbParam), problemType(_problemType),
+                                                          children(std::vector<TreeNode*>())
 {
+}
+
+TreeNode::TreeNode(unsigned _index, TreeNode* _parent) : parent(_parent), nVisits(0), totalScore(0.), nodeIndex(_index),
+                                                         children(std::vector<TreeNode*>())
+{
+    if(_parent){
+        this->ucbParam = _parent->ucbParam;
+        this->problemType = _parent->problemType;
+    }else{
+        throw "Cannot create child node without valid parent node...";
+    }
 }
 
 
@@ -80,6 +93,11 @@ TreeNode* TreeNode::select()
 	// for maximizing problem
 	double bestValue = 0.;
 
+    // update value for minimizing problem
+    if(!problemType){
+        bestValue = MAXFLOAT;
+    }
+
 	// First check unvisited node
 	auto unvisitedNodeIndex = std::vector<unsigned>();
 	unsigned index = 0;
@@ -113,18 +131,24 @@ TreeNode* TreeNode::select()
 		// all nodes are visited once, now we can exploit UCB1 formula
 		for (auto child : children)
 		{
-            // TODO : possibility to change UCB params
-			double c = sqrt(2.);
-			double uctValue = (child->totalScore / (child->nVisits)) + sqrt(50.) * sqrt(log(child->nVisits) / (childrenVisits));
+			double uctValue = (child->totalScore / (child->nVisits)) + ucbParam * sqrt(log(child->nVisits) / (childrenVisits));
 			double prob = rand() % RAND_MAX;
 
-			// choose only if better or randomly if equal
-			if (uctValue > bestValue || (uctValue == bestValue && prob < 0.5))
-			{
-				selected = child;
-				bestValue = uctValue;
-			}
-		}
+            // check all cases of problem update
+            if(problemType && uctValue > bestValue){
+
+                selected = child;
+                bestValue = uctValue;
+            }else if(!problemType && uctValue < bestValue){
+
+                selected = child;
+                bestValue = uctValue;
+            }else if (uctValue == bestValue && prob < 0.5){
+
+                selected = child;
+                bestValue = uctValue;
+            }
+        }
 	}
 
 	return selected;

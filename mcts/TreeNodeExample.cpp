@@ -1,8 +1,13 @@
 #include "TreeNodeExample.h"
 
-TreeNodeExample::TreeNodeExample(unsigned _index) : TreeNode(_index)
+TreeNodeExample::TreeNodeExample(double _ucbParam, bool _problemType) : TreeNode(_ucbParam, _problemType)
 {
 }
+
+TreeNodeExample::TreeNodeExample(unsigned _index, TreeNode* _parent) : TreeNode(_index, _parent)
+{
+}
+
 
 void TreeNodeExample::expand()
 {
@@ -24,6 +29,12 @@ double TreeNodeExample::rollOut(TreeNode* _node)
 TreeNode* TreeNodeExample::getBestChild()
 {
     double bestScore = 0.;
+
+    // if problem we want is to minimize
+    if (!problemType) {
+        bestScore = MAXFLOAT;
+    }
+
     TreeNode* childNode = nullptr;
 
     // find best child score based on number of times it was chosen
@@ -31,8 +42,17 @@ TreeNode* TreeNodeExample::getBestChild()
     {
         double score = child->getScore();
 
-        if (score > bestScore)
+        // if problem we want is to maximize
+        if(problemType)
         {
+            if (score > bestScore)
+            {
+                childNode = child;
+
+                // set next move information
+                bestScore = child->getScore();
+            }
+        }else if (score > bestScore) {
             childNode = child;
 
             // set next move information

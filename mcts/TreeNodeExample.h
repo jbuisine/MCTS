@@ -11,9 +11,15 @@ class TreeNodeExample : public TreeNode
 {
 public:
 
-    // summary : Constructor of TreeNodeExample
+    // summary : Constructor of TreeNodeExample root node
+    // parameter : @_ucbParam is the ucb param to use for MCTS
+    // parameter : @_problemType is the kind of problem (maximizing: true, minimizing: false)
+    TreeNodeExample(double _ucbParam, bool _problemType);
+
+    // summary : Child TreeNodeExample node constructor
     // parameter : @_index is the index of current node
-    TreeNodeExample(unsigned _index);
+    // parameter : @_parent is the parent node to associate
+    TreeNodeExample(unsigned _index, TreeNode* _parent);
 
     // summary : Step 2 (expansion) : open new nodes (if current node is not terminal node)
     // returns : nothing

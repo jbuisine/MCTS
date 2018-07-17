@@ -51,9 +51,15 @@ protected:
 		Methods
 	**************/
 
-	// summary : Default constructor
+	// summary : Constructor of root node
+    // parameter : @_ucbParam is the ucb param to use for MCTS
+    // parameter : @_problemType is the kind of problem (maximizing: true, minimizing: false)
+	TreeNode(double _ucbParam, bool _problemType);
+
+    // summary : Child node constructor
     // parameter : @_index is the index of current node
-	TreeNode(unsigned _index);
+    // parameter : @_parent is the parent node to associate
+    TreeNode(unsigned _index, TreeNode* _parent);
 
 	// summary : Default destructor
 	virtual ~TreeNode();
@@ -93,6 +99,9 @@ private:
 	  Attributes
 	**************/
 
+    // Parent node of current node (if nullptr : Root Node)
+    TreeNode* parent;
+
 	// Number of visits of current node
 	unsigned nVisits;
 
@@ -101,5 +110,11 @@ private:
 
     // keep in memory node index
     unsigned nodeIndex;
+
+    // ucb EvE compromise param
+    double ucbParam;
+
+    // kind of problem (maximizing: true, minimizing: false)
+    bool problemType;
 };
 
