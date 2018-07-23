@@ -7,20 +7,30 @@
 
 int main () {
 
-    unsigned numberOfIterations = 100;
+    srand(static_cast<unsigned int>(time(NULL)));
 
-    TreeNodeExample* rootNode = new TreeNodeExample(sqrt(2), true);
+    unsigned numberOfIterations = 1000;
+
+    auto rootNode = new TreeNodeExample(sqrt(2));
 
     for(unsigned i = 0; i < numberOfIterations; i++){
         rootNode->selectAction();
+
+        std::cout << "---------- Iteration " << i << "----------------------" << std::endl;
+
+        // display score information of each sub node
+        for(auto node : rootNode->getChildren()){
+            std::cout << "Node " << node->getIndex() << " (visited : " << node->getNVisits() << ")"
+                                 << " : " << node->getScore() << std::endl;
+        }
     }
 
-    // TODO : check link issue
     TreeNode* nextNodeToUse = rootNode->getBestChild();
     unsigned nodeIndex = nextNodeToUse->getIndex();
 
     delete rootNode;
 
-    std::cout << "Next node to use is [Node " << nextNodeToUse << "]" << std::endl;
+    std::cout << std::endl << "----- Result -------------------" << std::endl;
+    std::cout << "Next node to use is [Node " << nextNodeToUse->getIndex() << "]" << std::endl;
 
 }

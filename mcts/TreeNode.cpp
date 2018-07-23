@@ -1,8 +1,8 @@
-#include "TreeNode.h"
+#include <TreeNode.h>
+#include <random>
 
-TreeNode::TreeNode(double _ucbParam, bool _problemType) : parent(nullptr), nVisits(0), totalScore(0.), nodeIndex(0),
-                                                          ucbParam(_ucbParam), problemType(_problemType),
-                                                          children(std::vector<TreeNode*>())
+TreeNode::TreeNode(double _ucbParam) : parent(nullptr), nVisits(0), totalScore(0.), nodeIndex(0),
+                                                          ucbParam(_ucbParam), children(std::vector<TreeNode*>())
 {
 }
 
@@ -11,7 +11,6 @@ TreeNode::TreeNode(unsigned _index, TreeNode* _parent) : parent(_parent), nVisit
 {
     if(_parent){
         this->ucbParam = _parent->ucbParam;
-        this->problemType = _parent->problemType;
     }else{
         throw "Cannot create child node without valid parent node...";
     }
@@ -82,7 +81,7 @@ void TreeNode::updateStats(double _value)
 
 unsigned TreeNode::arity()
 {
-	return children.empty() ? 0 : children.size();
+	return static_cast<unsigned int>(children.empty() ? 0 : children.size());
 }
 
 TreeNode* TreeNode::select()
@@ -90,13 +89,8 @@ TreeNode* TreeNode::select()
 	// by default initialize with empty node
 	TreeNode* selected = nullptr;
 
-	// for maximizing problem
+	// initialize value
 	double bestValue = 0.;
-
-    // update value for minimizing problem
-    if(!problemType){
-        bestValue = MAXFLOAT;
-    }
 
 	// First check unvisited node
 	auto unvisitedNodeIndex = std::vector<unsigned>();
@@ -116,7 +110,7 @@ TreeNode* TreeNode::select()
 		index++;
 	}
 
-	unsigned nbUnvisited = unvisitedNodeIndex.size();
+	unsigned nbUnvisited = static_cast<unsigned int>(unvisitedNodeIndex.size());
 
 	if (nbUnvisited > 0)
 	{
@@ -131,19 +125,12 @@ TreeNode* TreeNode::select()
 		// all nodes are visited once, now we can exploit UCB1 formula
 		for (auto child : children)
 		{
-			double uctValue = (child->totalScore / (child->nVisits)) + ucbParam * sqrt(log(child->nVisits) / (childrenVisits));
-			double prob = rand() % RAND_MAX;
+			double uctValue = child->getScore() + ucbParam * sqrt(log(childrenVisits) / (child->nVisits));
+
+			double prob = ((double) rand() / (RAND_MAX));
 
             // check all cases of problem update
-            if(problemType && uctValue > bestValue){
-
-                selected = child;
-                bestValue = uctValue;
-            }else if(!problemType && uctValue < bestValue){
-
-                selected = child;
-                bestValue = uctValue;
-            }else if (uctValue == bestValue && prob < 0.5){
+            if(uctValue > bestValue || (uctValue == bestValue && prob < 0.5)){
 
                 selected = child;
                 bestValue = uctValue;
