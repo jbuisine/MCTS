@@ -27,11 +27,11 @@ If you want to implement your own version of MCTS
 
 You have to define the abstract methods :
 - expand() : how you expand your problem (depend of your context)
-- rollOut(TreeNode* _node) : what is your simulation and roll out
+- rollOut(TreeNode* _node) : what is your simulation and roll out returned
+- getBestChild() : what is for you the best child result
 
 You can also redefine other methods if necessary. Note that by default, TreeNode use UCB for maximizing problem. If you want, you can redefine these two methods too :
-- select() : selection method of next node to explore (UCB1 formula for example)
-- getBestChildResult() : what is for you the best child result
+- select() : selection method of next node to explore (UCB1 formula currently)
 
 ## Contributors
 

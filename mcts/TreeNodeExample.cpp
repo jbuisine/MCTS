@@ -1,6 +1,11 @@
-#include "TreeNodeExample.h"
+#include <TreeNodeExample.h>
+#include <random>
 
-TreeNodeExample::TreeNodeExample(unsigned _index) : TreeNode(_index)
+TreeNodeExample::TreeNodeExample(double _ucbParam) : TreeNode(_ucbParam)
+{
+}
+
+TreeNodeExample::TreeNodeExample(unsigned _index, TreeNode* _parent) : TreeNode(_index, _parent)
 {
 }
 
@@ -10,7 +15,7 @@ void TreeNodeExample::expand()
     for(unsigned i = 0; i < 5; i++){
 
         // create and add new node
-        TreeNodeExample* node = new TreeNodeExample(i);
+        auto node = new TreeNodeExample(i, this);
         children.push_back(node);
     }
 }
@@ -18,12 +23,13 @@ void TreeNodeExample::expand()
 double TreeNodeExample::rollOut(TreeNode* _node)
 {
     // default roll out for example
-    return rand() % 15 + 5;
+    return ((double) rand() / (RAND_MAX)) * 10;
 }
 
 TreeNode* TreeNodeExample::getBestChild()
 {
     double bestScore = 0.;
+
     TreeNode* childNode = nullptr;
 
     // find best child score based on number of times it was chosen

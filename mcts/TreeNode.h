@@ -10,6 +10,16 @@ class TreeNode
 {
 
 public:
+
+    // summary : Constructor of root node
+    // parameter : @_ucbParam is the ucb param to use for MCTS
+    TreeNode(double _ucbParam);
+
+    // summary : Child node constructor
+    // parameter : @_index is the index of current node
+    // parameter : @_parent is the parent node to associate
+    TreeNode(unsigned _index, TreeNode* _parent);
+
 	// summary : Select next node to use in the tree, expand it, run simulation and do backpropgation
 	// returns : nothing
 	virtual void selectAction();
@@ -45,15 +55,17 @@ public:
         return nodeIndex;
     };
 
+    // summary : Returns children of current node
+    // returns : std::vector<TreeNode*>
+	std::vector<TreeNode*> getChildren(){
+	    return children;
+	}
+
 protected:
 
 	/**************
 		Methods
 	**************/
-
-	// summary : Default constructor
-    // parameter : @_index is the index of current node
-	TreeNode(unsigned _index);
 
 	// summary : Default destructor
 	virtual ~TreeNode();
@@ -80,6 +92,10 @@ protected:
 	// returns : unsigned
 	virtual unsigned arity();
 
+    // summary : Returns the best next child known at the moment
+    // returns : TreeNode*
+	virtual TreeNode* getBestChild() = 0;
+
 	/**************
 	  Attributes
 	**************/
@@ -93,6 +109,9 @@ private:
 	  Attributes
 	**************/
 
+    // Parent node of current node (if nullptr : Root Node)
+    TreeNode* parent;
+
 	// Number of visits of current node
 	unsigned nVisits;
 
@@ -101,5 +120,8 @@ private:
 
     // keep in memory node index
     unsigned nodeIndex;
+
+    // ucb EvE compromise param
+    double ucbParam;
 };
 
