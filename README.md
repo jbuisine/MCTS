@@ -30,7 +30,7 @@ You have to define the abstract methods :
 - rollOut(TreeNode* _node) : what is your simulation and roll out returned
 - getBestChild() : what is for you the best child result
 
-You can also redefine other methods if necessary. Note that by default, TreeNode use UCB for maximizing problem. If you want, you can redefine these two methods too :
+Note that by default, TreeNode abstract class use UCB selection :
 - select() : selection method of next node to explore (UCB1 formula currently)
 
 ## Contributors
